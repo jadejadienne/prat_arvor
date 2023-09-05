@@ -1,0 +1,111 @@
+class No:
+    def __init__(self, valor):
+        self.valor = valor
+        self.esquerda = None
+        self.direita = None
+
+class ArvoreBinaria:
+    def __init__(self):
+        self.raiz = None
+
+    def inserir_em_nivel(self, valor):
+        if self.raiz is None:
+            self.raiz = No(valor)
+        else:
+            self.inserir_em_nivel_recursivo(valor, self.raiz)
+
+    def inserir_em_nivel_recursivo(self, valor, no):
+        if valor < no.valor:
+            if no.esquerda is None:
+                no.esquerda = No(valor)
+            else:
+                self.inserir_em_nivel_recursivo(valor, no.esquerda)
+        else:
+            if no.direita is None:
+                no.direita = No(valor)
+            else:
+                self.inserir_em_nivel_recursivo(valor, no.direita)
+
+    def mostrar_ordem_niveis(self):
+        if self.raiz is None:
+            print("A árvore está vazia.")
+        else:
+            fila = [self.raiz]
+            while fila:
+                no = fila.pop(0)
+                print(no.valor, end=" ")
+                if no.esquerda:
+                    fila.append(no.esquerda)
+                if no.direita:
+                    fila.append(no.direita)
+
+    def altura(self):
+        return self.calcula_altura(self.raiz)
+
+    def calcula_altura(self, no):
+        if no is None:
+            return 0
+        altura_esquerda = self.calcula_altura(no.esquerda)
+        altura_direita = self.calcula_altura(no.direita)
+        return max(altura_esquerda, altura_direita) + 1
+
+    def listar_nos_internos(self):
+        return self.listar_nos_internos_recursivo(self.raiz)
+
+    def listar_nos_internos_recursivo(self, no):
+        if no is None:
+            return []
+        if no.esquerda or no.direita:
+            return [no.valor] + self.listar_nos_internos_recursivo(no.esquerda) + self.listar_nos_internos_recursivo(no.direita)
+        return []
+
+    def listar_folhas(self):
+        return self.listar_folhas_recursivo(self.raiz)
+
+    def listar_folhas_recursivo(self, no):
+        if no is None:
+            return []
+        if not no.esquerda and not no.direita:
+            return [no.valor]
+        return self.listar_folhas_recursivo(no.esquerda) + self.listar_folhas_recursivo(no.direita)
+
+    def buscar(self, valor):
+        return self.buscar_recursivo(valor, self.raiz)
+
+    def buscar_recursivo(self, valor, no):
+        if no is None:
+            return False
+        if valor == no.valor:
+            return True
+        if valor < no.valor:
+            return self.buscar_recursivo(valor, no.esquerda)
+        return self.buscar_recursivo(valor, no.direita)
+
+    def mostrar_raiz(self):
+        if self.raiz is None:
+            print("A árvore está vazia.")
+        else:
+            print("Raiz:", self.raiz.valor)
+
+# Exemplo de uso
+arvore = ArvoreBinaria()
+arvore.inserir_em_nivel(5)
+arvore.inserir_em_nivel(3)
+arvore.inserir_em_nivel(7)
+arvore.inserir_em_nivel(2)
+arvore.inserir_em_nivel(4)
+arvore.inserir_em_nivel(6)
+arvore.inserir_em_nivel(8)
+
+print("Ordem de níveis:")
+arvore.mostrar_ordem_niveis()
+print()
+
+arvore.mostrar_raiz()
+
+print("Altura da árvore:", arvore.altura())
+
+print("Nós internos:", arvore.listar_nos_internos())
+
+print("Folhas:", arvore.listar_folhas())
+
